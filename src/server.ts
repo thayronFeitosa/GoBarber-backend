@@ -1,18 +1,9 @@
 import express from 'express';
-
+import routes from './routes/index'
 const app = express();
 
 app.use(express.json())
-app.post('/', (req, res) => {
-    const { name, email } = req.body;
-
-    const user = {
-        name,
-        email,
-    };
-
-    res.json(user)
-});
+app.use(routes);
 app.listen(3333, () => {
     console.log("servidor rodando na porta 3333")
 });
