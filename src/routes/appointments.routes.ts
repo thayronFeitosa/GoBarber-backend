@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { startOfHour, parseISO } from 'date-fns';
+import { parseISO } from 'date-fns';
 import AppointmentRepository from '../repositories/AppointmentsRepository';
-
+import CreateAppointmentService from '../service/CreateAppointmentService'
 
 const appointmentsRouter = Router();
 const appontReporisory = new AppointmentRepository();
@@ -15,20 +15,18 @@ appointmentsRouter.get('/',(request, response)=>{
 
 
 appointmentsRouter.post('/', (request, response) => {
-    const { provider, date } = request.body;
-    const parserDate = startOfHour(parseISO(date));
+    try{
+        const { provider, date } = request.body;
 
-    const findAppontmentInSameDate = appontReporisory.findByDate(parserDate)
-    if (findAppontmentInSameDate) {
-        return response.status(402).json({ message: "This appoiment is already boocked" })
+        const parserDate = parseISO(date);
+        const createAppointment = new CreateAppointmentService(appontReporisory);
+        const appointment = createAppointment.execute({provider,date: parserDate })
+    
+        return response.json(appointment)
+    }catch(err){
+        return response.status(400).json({erro: err.message})
+
     }
-
-    const appointment = appontReporisory.create({
-        provider,
-        date: parserDate
-    })
-
-    return response.json(appointment)
 })
 
 export default appointmentsRouter;
