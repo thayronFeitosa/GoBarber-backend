@@ -1,19 +1,33 @@
-import {Router} from 'express';
-import {uuid} from 'uuidv4'
+import { Router } from 'express';
+import { startOfHour, parseISO } from 'date-fns';
+import AppointmentRepository from '../repositories/AppointmentsRepository';
+
 
 const appointmentsRouter = Router();
-const appointments =[]
-appointmentsRouter.post('/', (request, response)=>{
+const appontReporisory = new AppointmentRepository();
+
+appointmentsRouter.get('/',(request, response)=>{
+    const appointments = appontReporisory.all();
+    return response.json(appointments)
+
+
+})
+
+
+appointmentsRouter.post('/', (request, response) => {
     const { provider, date } = request.body;
-const appointment ={
-    id: uuid(),
-    provider,
-    date
-};
+    const parserDate = startOfHour(parseISO(date));
 
-appointments.push(appointment);
+    const findAppontmentInSameDate = appontReporisory.findByDate(parserDate)
+    if (findAppontmentInSameDate) {
+        return response.status(402).json({ message: "This appoiment is already boocked" })
+    }
 
-    
+    const appointment = appontReporisory.create({
+        provider,
+        date: parserDate
+    })
+
     return response.json(appointment)
 })
 
