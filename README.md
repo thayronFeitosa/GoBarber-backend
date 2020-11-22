@@ -17,13 +17,27 @@
         As configurações basicar deveram ser passadas no arquivo armconfig.json na raiz do projeto. A estrutura deverá ser feita como o exemplo a baixo.
 
     ```json
-        {
+    {
         "type": "postgres",
         "host": "localhost",
         "port": 5432,
         "username": "postgres",
         "password": "root123",
-        "database": "gostack_gobarber"
+        "database": "gostack_gobarber",
+        "migrations":[
+        "./src/database/migrations/*.ts"
+        ],
+        "cli":{
+        "migrationsDir":"./src/database/migrations"
         }
+    }
     ```
+</p>
+
+<p> 
+ <h3> Migratios <h3>
+ 
+ ```
+ ❯ yarn typeorm migration:create -n CreateAppointments
+ ```
 </p>
