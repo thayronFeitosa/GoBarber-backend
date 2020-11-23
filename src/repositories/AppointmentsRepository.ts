@@ -17,6 +17,7 @@ class AppointmentsRepository extends Repository<Appointment> {
 
     })
 
+
     return findAppontment || null;
   }
 
