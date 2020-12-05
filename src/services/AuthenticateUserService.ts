@@ -31,9 +31,9 @@ export default class AuthenticateUserService {
     const passwordMatches = await compare(password, user.password);
 
     if (!passwordMatches) {
-      throw new AppError("incorret email/password combination",401);
+      throw new AppError("incorret email/password combination", 401);
     }
-    const { expiresIn,secret} = authConfig.jwt;
+    const { expiresIn, secret } = authConfig.jwt;
     const token = sign({}, secret, {
       subject: user.id,
       expiresIn: expiresIn
